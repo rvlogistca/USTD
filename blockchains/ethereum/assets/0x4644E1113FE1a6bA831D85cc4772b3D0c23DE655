@@ -1,2 +1,123 @@
+pragma solidity ^0.4.17;
 
-https://raw.githubusercontent.com/rvlogistca/USTD/main/blockchains/ethereum/assets/0x4644E1113FE1a6bA831D85cc4772b3D0c23DE655/logo.png
+library SafeMath {
+    function mul(uint256 a, uint256 b) internal pure returns (uint256) {
+        if (a == 0) return 0;
+        uint256 c = a * b;
+        assert(c / a == b);
+        return c;
+    }
+    function div(uint256 a, uint256 b) internal pure returns (uint256) {
+        assert(b > 0);
+        uint256 c = a / b;
+        return c;
+    }
+    function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+        assert(b <= a);
+        return a - b;
+    }
+    function add(uint256 a, uint256 b) internal pure returns (uint256) {
+        uint256 c = a + b;
+        assert(c >= a);
+        return c;
+    }
+}
+
+contract Ownable {
+    address public owner;
+    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+    function Ownable() public { owner = msg.sender; }
+    modifier onlyOwner() { require(msg.sender == owner); _; }
+    function transferOwnership(address newOwner) public onlyOwner {
+        require(newOwner != address(0));
+        OwnershipTransferred(owner, newOwner);
+        owner = newOwner;
+    }
+}
+
+contract Pausable is Ownable {
+    event Pause();
+    event Unpause();
+    bool public paused = false;
+    modifier whenNotPaused() { require(!paused); _; }
+    modifier whenPaused() { require(paused); _; }
+    function pause() onlyOwner whenNotPaused public { paused = true; Pause(); }
+    function unpause() onlyOwner whenPaused public { paused = false; Unpause(); }
+}
+
+contract TetherToken is Pausable {
+    using SafeMath for uint256;
+    string public name;
+    string public symbol;
+    uint8 public decimals;
+    uint256 public totalSupply;
+    mapping (address => uint256) public balanceOf;
+    mapping (address => mapping (address => uint256)) public allowance;
+    mapping (address => bool) public frozenAccount;
+
+    event Transfer(address indexed from, address indexed to, uint256 value);
+    event Approval(address indexed owner, address indexed spender, uint256 value);
+    event FrozenFunds(address target, bool frozen);
+
+    function TetherToken(uint256 initialSupply, string tokenName, string tokenSymbol, uint8 decimalUnits) public {
+        totalSupply = initialSupply * 10 ** uint256(decimalUnits);
+        balanceOf[msg.sender] = totalSupply;
+        name = tokenName;
+        symbol = tokenSymbol;
+        decimals = decimalUnits;
+    }
+
+    function _transfer(address _from, address _to, uint _value) internal {
+        require(_to != 0x0);
+        require(balanceOf[_from] >= _value);
+        require(balanceOf[_to] + _value >= balanceOf[_to]);
+        require(!frozenAccount[_from]);
+        require(!frozenAccount[_to]);
+        balanceOf[_from] = balanceOf[_from].sub(_value);
+        balanceOf[_to] = balanceOf[_to].add(_value);
+        Transfer(_from, _to, _value);
+    }
+
+    function transfer(address _to, uint256 _value) public whenNotPaused {
+        _transfer(msg.sender, _to, _value);
+    }
+
+    function transferFrom(address _from, address _to, uint256 _value) public whenNotPaused returns (bool success) {
+        require(allowance[_from][msg.sender] >= _value);
+        allowance[_from][msg.sender] = allowance[_from][msg.sender].sub(_value);
+        _transfer(_from, _to, _value);
+        return true;
+    }
+
+    function approve(address _spender, uint256 _value) public whenNotPaused returns (bool success) {
+        allowance[msg.sender][_spender] = _value;
+        Approval(msg.sender, _spender, _value);
+        return true;
+    }
+
+    function increaseAllowance(address _spender, uint256 _addedValue) public whenNotPaused returns (bool success) {
+        allowance[msg.sender][_spender] = allowance[msg.sender][_spender].add(_addedValue);
+        Approval(msg.sender, _spender, allowance[msg.sender][_spender]);
+        return true;
+    }
+
+    function decreaseAllowance(address _spender, uint256 _subtractedValue) public whenNotPaused returns (bool success) {
+        uint256 oldValue = allowance[msg.sender][_spender];
+        require(_subtractedValue <= oldValue);
+        allowance[msg.sender][_spender] = oldValue.sub(_subtractedValue);
+        Approval(msg.sender, _spender, allowance[msg.sender][_spender]);
+        return true;
+    }
+
+    function mint(address target, uint256 mintedAmount) public onlyOwner {
+        balanceOf[target] = balanceOf[target].add(mintedAmount);
+        totalSupply = totalSupply.add(mintedAmount);
+        Transfer(0, this, mintedAmount);
+        Transfer(this, target, mintedAmount);
+    }
+
+    function freezeAccount(address target, bool freeze) public onlyOwner {
+        frozenAccount[target] = freeze;
+        FrozenFunds(target, freeze);
+    }
+}

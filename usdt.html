@@ -1,0 +1,76 @@
+import qrcode
+from qrcode.image.styledpil import StyledPilImage
+from qrcode.image.styles.moduledrawers import RoundedModuleDrawer
+from PIL import Image, ImageDraw
+import requests
+from io import BytesIO
+
+# URL do QR Code original
+url = "https://gemini.google.com/app/bfdfdf98ef24a0ab?utm_source=ai.google&utm_medium=referral"
+
+# Cria o QR Code
+qr = qrcode.QRCode(
+    version=1,
+    error_correction=qrcode.constants.ERROR_CORRECT_H,  # Alta correção de erro para permitir logo no centro
+    box_size=12,
+    border=4,
+)
+qr.add_data(url)
+qr.make(fit=True)
+
+# Gera a imagem do QR Code com módulos arredondados (estilo mais moderno)
+img = qr.make_image(
+    image_factory=StyledPilImage,
+    module_drawer=RoundedModuleDrawer()
+).convert("RGB")
+
+# Cria o dinossauro (T-Rex) estilizado no centro (como no Chrome)
+def create_dino_logo(size=120):
+    logo = Image.new("RGBA", (size, size), (255, 255, 255, 0))
+    draw = ImageDraw.Draw(logo)
+    
+    # Corpo do dinossauro (preto)
+    # Cabeça
+    draw.ellipse([35, 20, 85, 55], fill="black")
+    # Olho
+    draw.ellipse([65, 30, 75, 40], fill="white")
+    draw.ellipse([68, 33, 72, 37], fill="black")
+    # Corpo
+    draw.ellipse([25, 45, 95, 95], fill="black")
+    # Pescoço
+    draw.rectangle([40, 40, 55, 60], fill="black")
+    # Braços
+    draw.ellipse([15, 55, 35, 75], fill="black")
+    draw.ellipse([85, 55, 105, 75], fill="black")
+    # Pernas
+    draw.rectangle([35, 85, 50, 110], fill="black")
+    draw.rectangle([70, 85, 85, 110], fill="black")
+    # Cauda
+    draw.polygon([(20, 70), (5, 85), (25, 90)], fill="black")
+    
+    return logo
+
+# Adiciona o logo do dinossauro no centro
+dino = create_dino_logo(140)
+pos = ((img.size[0] - dino.size[0]) // 2, (img.size[1] - dino.size[1]) // 2)
+
+# Cria fundo branco circular atrás do dino para melhor legibilidade
+bg = Image.new("RGBA", img.size, (255, 255, 255, 0))
+bg_draw = ImageDraw.Draw(bg)
+center = (img.size[0] // 2, img.size[1] // 2)
+radius = 85
+bg_draw.ellipse(
+    [center[0] - radius, center[1] - radius, center[0] + radius, center[1] + radius],
+    fill="white"
+)
+
+# Combina tudo
+img = img.convert("RGBA")
+img = Image.alpha_composite(img, bg)
+img.paste(dino, pos, dino)
+
+# Salva o resultado
+img = img.convert("RGB")
+img.save("gemini_qrcode_dino.png")
+print("QR Code gerado com sucesso: gemini_qrcode_dino.png")
+print(f"URL embutida: {url}")

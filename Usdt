@@ -1,7 +1,681 @@
-Rede	Endereço do Contrato
-Ethereum (ERC-20)	 ✅
-Tron (TRC-20)
-BNB Chain (BEP-20)
-Polygon
-Solana
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USDT Developer & Utilities Suite</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- QR Code Generator -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        tether: {
+                            100: '#ccfbf1',
+                            500: '#26A17B',
+                            600: '#1e8364',
+                            700: '#18674f',
+                            800: '#13503f',
+                            900: '#104335'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(38,161,123,0.3);
+            border-radius: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(38,161,123,0.6);
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans antialiased custom-scrollbar">
 
+    <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full bg-tether-500/10 border border-tether-500/30 flex items-center justify-center text-tether-500 font-bold text-xl shadow-lg shadow-tether-500/10">
+                    ₮
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg text-white leading-none">USDT Dev Suite</h1>
+                    <span class="text-xs text-tether-500 font-mono">Tether Utilities & Smart Contracts</span>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <div class="bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg flex items-center space-x-2 text-xs">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                    <span class="text-slate-400">Peg Rate:</span>
+                    <span class="font-mono font-semibold text-emerald-400">$1.00 USD</span>
+                </div>
+                <a href="https://tether.to" target="_blank" class="text-xs text-slate-400 hover:text-tether-500 transition-colors">
+                    <i class="fa-solid fa-arrow-up-right-from-square mr-1"></i> Tether Official
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+        <!-- Top Overview & Info Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="bg-slate-800/50 border border-slate-700/50 rounded-xl p-4">
+                <div class="text-xs font-medium text-slate-400 uppercase tracking-wider mb-1">Standard Decimals</div>
+                <div class="text-2xl font-bold font-mono text-white flex items-baseline justify-between">
+                    <span>6 Decimals</span>
+                    <span class="text-xs font-normal text-tether-500 bg-tether-500/10 px-2 py-0.5 rounded border border-tether-500/20">10^6</span>
+                </div>
+                <p class="text-xs text-slate-400 mt-2">Diferente do padrão ETH (18), a maioria das redes USDT usa 6 casas decimais.</p>
+            </div>
+
+            <div class="bg-slate-800/50 border border-slate-700/50 rounded-xl p-4">
+                <div class="text-xs font-medium text-slate-400 uppercase tracking-wider mb-1">Principal Rede Transferência</div>
+                <div class="text-2xl font-bold font-mono text-emerald-400">TRC-20 (TRON)</div>
+                <p class="text-xs text-slate-400 mt-2">Menores taxas globais e alta liquidez para envios diretos.</p>
+            </div>
+
+            <div class="bg-slate-800/50 border border-slate-700/50 rounded-xl p-4">
+                <div class="text-xs font-medium text-slate-400 uppercase tracking-wider mb-1">Rede Web3 / DeFi</div>
+                <div class="text-2xl font-bold font-mono text-cyan-400">ERC-20 & Arbitrum</div>
+                <p class="text-xs text-slate-400 mt-2">Padrão da rede Ethereum para integração de dApps e Smart Contracts.</p>
+            </div>
+
+            <div class="bg-slate-800/50 border border-slate-700/50 rounded-xl p-4">
+                <div class="text-xs font-medium text-slate-400 uppercase tracking-wider mb-1">Cotação Atual (Aprox.)</div>
+                <div class="text-2xl font-bold font-mono text-white" id="usdt-brl-price">R$ 5,65 BRL</div>
+                <p class="text-xs text-slate-400 mt-2">1 USDT ≈ 1.000 USD (Taxa de câmbio pareada no dólar).</p>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="border-b border-slate-800 flex space-x-6 text-sm font-medium">
+            <button onclick="switchTab('contracts')" id="tab-btn-contracts" class="tab-btn pb-3 border-b-2 border-tether-500 text-tether-500 flex items-center space-x-2">
+                <i class="fa-solid fa-file-contract"></i>
+                <span>Contratos por Rede</span>
+            </button>
+            <button onclick="switchTab('snippets')" id="tab-btn-snippets" class="tab-btn pb-3 border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-2">
+                <i class="fa-solid fa-code"></i>
+                <span>Códigos de Integração</span>
+            </button>
+            <button onclick="switchTab('tools')" id="tab-btn-tools" class="tab-btn pb-3 border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-2">
+                <i class="fa-solid fa-qrcode"></i>
+                <span>Gerador de QR / Validador</span>
+            </button>
+            <button onclick="switchTab('converter')" id="tab-btn-converter" class="tab-btn pb-3 border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-2">
+                <i class="fa-solid fa-calculator"></i>
+                <span>Conversor de Unidades</span>
+            </button>
+        </div>
+
+        <!-- TAB 1: CONTRACTS DIRECTORY -->
+        <div id="tab-contracts" class="tab-content space-y-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-lg font-bold text-white">Endereços de Contrato USDT por Blockchain</h2>
+                    <p class="text-xs text-slate-400">Copie o endereço correto de contrato para adicionar o token à sua carteira Web3 ou contrato inteligente.</p>
+                </div>
+                <input type="text" id="contract-search" oninput="filterContracts()" placeholder="Filtrar rede..." class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-tether-500 w-48">
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="contracts-grid">
+                <!-- Javascript will populate or static cards here -->
+            </div>
+        </div>
+
+        <!-- TAB 2: CODE SNIPPETS -->
+        <div id="tab-snippets" class="tab-content hidden space-y-6">
+            <div class="bg-slate-800/40 border border-slate-700/50 rounded-xl p-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <h2 class="text-lg font-bold text-white">Exemplos de Código Práticos</h2>
+                        <p class="text-xs text-slate-400">Snippets prontos para usar para consulta de saldo, transferência e contratos inteligentes de recebimento.</p>
+                    </div>
+
+                    <!-- Language selector buttons -->
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="showCodeLanguage('js')" id="lang-btn-js" class="lang-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-tether-500 text-slate-950">JavaScript / Ethers.js</button>
+                        <button onclick="showCodeLanguage('python')" id="lang-btn-python" class="lang-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700">Python / Web3.py</button>
+                        <button onclick="showCodeLanguage('solidity')" id="lang-btn-solidity" class="lang-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700">Solidity Gateway</button>
+                        <button onclick="showCodeLanguage('tron')" id="lang-btn-tron" class="lang-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700">TRON / TronWeb</button>
+                    </div>
+                </div>
+
+                <!-- Code Container JS -->
+                <div id="code-js" class="code-block relative">
+                    <div class="flex items-center justify-between bg-slate-950 px-4 py-2 rounded-t-xl border-b border-slate-800 text-xs text-slate-400">
+                        <span><i class="fa-brands fa-js text-yellow-400 mr-2"></i>usdt_ethers_v6.js</span>
+                        <button onclick="copyCode('code-content-js')" class="hover:text-tether-500 transition-colors flex items-center space-x-1">
+                            <i class="fa-regular fa-copy"></i>
+                            <span>Copiar Código</span>
+                        </button>
+                    </div>
+                    <pre class="bg-slate-950 p-4 rounded-b-xl text-xs font-mono text-slate-200 overflow-x-auto leading-relaxed custom-scrollbar"><code id="code-content-js">import { ethers } from "ethers";
+
+// 1. Configurações do USDT no Ethereum (ERC-20)
+const USDT_ADDRESS = "0xdAC17F958D2ee523a2206206994597C13D831ec7";
+const ERC20_ABI = [
+  "function balanceOf(address account) external view returns (uint256)",
+  "function decimals() external view returns (uint8)",
+  "function transfer(address recipient, uint256 amount) external returns (bool)"
+];
+
+// 2. Função para consultar saldo em USDT
+async function getUsdtBalance(walletAddress) {
+  // Provedor de leitura de nós (RPC público)
+  const provider = new ethers.JsonRpcProvider("https://eth.llamarpc.com");
+  
+  // Instanciação do contrato
+  const contract = new ethers.Contract(USDT_ADDRESS, ERC20_ABI, provider);
+  
+  // Leitura do saldo em unidades brutas (6 casas decimais)
+  const rawBalance = await contract.balanceOf(walletAddress);
+  const decimals = await contract.decimals();
+  
+  // Conversão para formato legível (ex: 100.50)
+  const formattedBalance = ethers.formatUnits(rawBalance, decimals);
+  console.log(`Saldo de USDT: ${formattedBalance}`);
+  return formattedBalance;
+}
+
+// 3. Exemplo de chamada
+// getUsdtBalance("0x71C7656EC7ab88b098defB751B7401B5f6d8976F");</code></pre>
+                </div>
+
+                <!-- Code Container Python -->
+                <div id="code-python" class="code-block hidden relative">
+                    <div class="flex items-center justify-between bg-slate-950 px-4 py-2 rounded-t-xl border-b border-slate-800 text-xs text-slate-400">
+                        <span><i class="fa-brands fa-python text-blue-400 mr-2"></i>usdt_tracker.py</span>
+                        <button onclick="copyCode('code-content-python')" class="hover:text-tether-500 transition-colors flex items-center space-x-1">
+                            <i class="fa-regular fa-copy"></i>
+                            <span>Copiar Código</span>
+                        </button>
+                    </div>
+                    <pre class="bg-slate-950 p-4 rounded-b-xl text-xs font-mono text-slate-200 overflow-x-auto leading-relaxed custom-scrollbar"><code id="code-content-python">from web3 import Web3
+
+# Conexão com o nó Ethereum
+rpc_url = "https://eth.llamarpc.com"
+w3 = Web3(Web3.HTTPProvider(rpc_url))
+
+# Endereço e ABI mínima do USDT
+usdt_address = Web3.to_checksum_address("0xdAC17F958D2ee523a2206206994597C13D831ec7")
+min_abi = [
+    {
+        "constant": True,
+        "inputs": [{"name": "_owner", "type": "address"}],
+        "name": "balanceOf",
+        "outputs": [{"name": "balance", "type": "uint256"}],
+        "type": "function"
+    },
+    {
+        "constant": True,
+        "inputs": [],
+        "name": "decimals",
+        "outputs": [{"name": "", "type": "uint8"}],
+        "type": "function"
+    }
+]
+
+# Inicializa o contrato
+contract = w3.eth.contract(address=usdt_address, abi=min_abi)
+
+def consultar_saldo_usdt(endereco_carteira):
+    wallet = Web3.to_checksum_address(endereco_carteira)
+    raw_balance = contract.functions.balanceOf(wallet).call()
+    decimals = contract.functions.decimals().call()
+    
+    # USDT utiliza 6 casas decimais
+    saldo_formatado = raw_balance / (10 ** decimals)
+    return saldo_formatado
+
+# Teste
+# print(f"Saldo USDT: {consultar_saldo_usdt('0x71C7656EC7ab88b098defB751B7401B5f6d8976F')}")</code></pre>
+                </div>
+
+                <!-- Code Container Solidity -->
+                <div id="code-solidity" class="code-block hidden relative">
+                    <div class="flex items-center justify-between bg-slate-950 px-4 py-2 rounded-t-xl border-b border-slate-800 text-xs text-slate-400">
+                        <span><i class="fa-solid fa-cube text-purple-400 mr-2"></i>USDTPaymentGateway.sol</span>
+                        <button onclick="copyCode('code-content-solidity')" class="hover:text-tether-500 transition-colors flex items-center space-x-1">
+                            <i class="fa-regular fa-copy"></i>
+                            <span>Copiar Código</span>
+                        </button>
+                    </div>
+                    <pre class="bg-slate-950 p-4 rounded-b-xl text-xs font-mono text-slate-200 overflow-x-auto leading-relaxed custom-scrollbar"><code id="code-content-solidity">// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+interface IERC20 {
+    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
+    function balanceOf(address account) external view returns (uint256);
+}
+
+/**
+ * @title Processador de Pagamentos em USDT
+ * @dev Permite receber USDT de clientes via transferência aprovada
+ */
+contract USDTPaymentGateway {
+    address public owner;
+    IERC20 public immutable usdtToken;
+
+    event PaymentReceived(address indexed customer, uint256 amount, string orderId);
+
+    constructor(address _usdtContractAddress) {
+        owner = msg.sender;
+        usdtToken = IERC20(_usdtContractAddress);
+    }
+
+    /**
+     * @notice Processa um pagamento do cliente
+     * @param amount Quantidade em unidades brutas (ex: 10 USDT = 10000000)
+     * @param orderId Identificador único do pedido
+     */
+    function processPayment(uint256 amount, string calldata orderId) external {
+        require(amount > 0, "Valor deve ser maior que zero");
+        
+        // Transfere os tokens da carteira do cliente para o contrato
+        bool success = usdtToken.transferFrom(msg.sender, address(this), amount);
+        require(success, "Falha na transferencia de USDT");
+
+        emit PaymentReceived(msg.sender, amount, orderId);
+    }
+}</code></pre>
+                </div>
+
+                <!-- Code Container TRON -->
+                <div id="code-tron" class="code-block hidden relative">
+                    <div class="flex items-center justify-between bg-slate-950 px-4 py-2 rounded-t-xl border-b border-slate-800 text-xs text-slate-400">
+                        <span><i class="fa-solid fa-bolt text-red-400 mr-2"></i>tronweb_usdt.js</span>
+                        <button onclick="copyCode('code-content-tron')" class="hover:text-tether-500 transition-colors flex items-center space-x-1">
+                            <i class="fa-regular fa-copy"></i>
+                            <span>Copiar Código</span>
+                        </button>
+                    </div>
+                    <pre class="bg-slate-950 p-4 rounded-b-xl text-xs font-mono text-slate-200 overflow-x-auto leading-relaxed custom-scrollbar"><code id="code-content-tron">// TRON TRC-20 USDT Integration (TronWeb)
+const USDT_TRC20_CONTRACT = "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t";
+
+async function sendTRC20USDT(recipientAddress, amountUsdt) {
+  try {
+    if (!window.tronWeb || !window.tronWeb.defaultAddress.base58) {
+      throw new Error("TronLink / TronWeb nao detectado.");
+    }
+
+    // Instancia o contrato TRC-20
+    let contract = await window.tronWeb.contract().at(USDT_TRC20_CONTRACT);
+    
+    // Converte para 6 casas decimais (SUN units)
+    let amountSun = TronWeb.toBigNumber(amountUsdt).multipliedBy(1e6).toString();
+    
+    // Envia a transacao
+    let result = await contract.transfer(recipientAddress, amountSun).send();
+    console.log("HASH da Transacao TRON:", result);
+    return result;
+  } catch (error) {
+    console.error("Erro ao enviar TRC20 USDT:", error);
+  }
+}</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: TOOLS (QR + VALIDATOR) -->
+        <div id="tab-tools" class="tab-content hidden grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Address Syntax Validator -->
+            <div class="bg-slate-800/40 border border-slate-700/50 rounded-xl p-6 space-y-4">
+                <div class="flex items-center space-x-3">
+                    <div class="p-2.5 rounded-lg bg-emerald-500/10 text-emerald-400">
+                        <i class="fa-solid fa-shield-check text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-white">Validador de Endereço USDT</h3>
+                        <p class="text-xs text-slate-400">Verifique a sintaxe antes de enviar para evitar perda de fundos.</p>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Selecione a Rede Destino</label>
+                        <select id="val-network" onchange="validateAddressInput()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-tether-500">
+                            <option value="TRC20">TRON (TRC-20) - Inicia com "T"</option>
+                            <option value="EVM">Ethereum / BSC / Polygon / Arbitrum (EVM) - Inicia com "0x"</option>
+                            <option value="SOL">Solana (SPL) - Base58 (32-44 caracteres)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Endereço de Destino</label>
+                        <input type="text" id="val-address" oninput="validateAddressInput()" placeholder="Cole o endereço para verificar..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs font-mono text-slate-200 focus:outline-none focus:border-tether-500">
+                    </div>
+
+                    <div id="val-result" class="p-3 rounded-lg border text-xs font-medium hidden">
+                        <!-- Result feedback -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dynamic QR Code Generator -->
+            <div class="bg-slate-800/40 border border-slate-700/50 rounded-xl p-6 space-y-4">
+                <div class="flex items-center space-x-3">
+                    <div class="p-2.5 rounded-lg bg-tether-500/10 text-tether-500">
+                        <i class="fa-solid fa-qrcode text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-white">Gerador de QR Code para Pagamento</h3>
+                        <p class="text-xs text-slate-400">Gere um QR Code com seu endereço e valor desejado.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Sua Carteira / Endereço</label>
+                            <input type="text" id="qr-input-address" oninput="generateQRCode()" placeholder="Cole seu endereço..." value="TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs font-mono text-slate-200 focus:outline-none focus:border-tether-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Valor (USDT) Opcional</label>
+                            <input type="number" id="qr-input-amount" oninput="generateQRCode()" placeholder="Ex: 50.00" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs font-mono text-slate-200 focus:outline-none focus:border-tether-500">
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col items-center justify-center bg-slate-950 border border-slate-800 rounded-xl p-4">
+                        <div id="qrcode" class="bg-white p-2 rounded-lg shadow-md"></div>
+                        <span class="text-[10px] text-slate-500 mt-2 font-mono" id="qr-caption">Escaneie para transferir</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: CONVERTER -->
+        <div id="tab-converter" class="tab-content hidden space-y-6">
+            <div class="bg-slate-800/40 border border-slate-700/50 rounded-xl p-6">
+                <h2 class="text-lg font-bold text-white mb-1">Conversor de Decimais & Unidades Brutas</h2>
+                <p class="text-xs text-slate-400 mb-6">Em Smart Contracts, o USDT não utiliza centavos decimais diretos, mas sim potências de 10^6 (Wei/Sun equivalents).</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-3">
+                        <label class="block text-xs font-semibold text-tether-500 uppercase">Valor Humano (Legível)</label>
+                        <div class="relative">
+                            <input type="number" id="unit-human" oninput="convertUnits('human')" placeholder="100.00" value="100" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm font-mono text-white focus:outline-none focus:border-tether-500">
+                            <span class="absolute right-3 top-2 text-xs text-slate-400">USDT</span>
+                        </div>
+                        <p class="text-[11px] text-slate-500">O valor real exibido em aplicativos de carteira e exchanges.</p>
+                    </div>
+
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-3">
+                        <label class="block text-xs font-semibold text-cyan-400 uppercase">Unidade Bruta do Contrato (6 Decimais)</label>
+                        <div class="relative">
+                            <input type="number" id="unit-raw" oninput="convertUnits('raw')" placeholder="100000000" value="100000000" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm font-mono text-white focus:outline-none focus:border-cyan-500">
+                            <span class="absolute right-3 top-2 text-xs text-slate-400">Units</span>
+                        </div>
+                        <p class="text-[11px] text-slate-500">O valor inteiro que deve ser passado para o método `transfer()` ou `approve()`.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Contract Database
+        const NETWORKS = [
+            {
+                name: "TRON (TRC-20)",
+                symbol: "TRX",
+                badge: "Mais Popular",
+                badgeColor: "bg-red-500/10 text-red-400 border-red-500/20",
+                address: "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t",
+                decimals: 6,
+                explorer: "https://tronscan.org/#/token20/TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t",
+                icon: "fa-bolt text-red-500"
+            },
+            {
+                name: "Ethereum (ERC-20)",
+                symbol: "ETH",
+                badge: "Padrão DeFi",
+                badgeColor: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+                address: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+                decimals: 6,
+                explorer: "https://etherscan.io/token/0xdAC17F958D2ee523a2206206994597C13D831ec7",
+                icon: "fa-brands fa-ethereum text-blue-400"
+            },
+            {
+                name: "BNB Smart Chain (BEP-20)",
+                symbol: "BSC",
+                badge: "Taxas Baixas",
+                badgeColor: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
+                address: "0x55d398326f99059ff775485246999027b3197955",
+                decimals: 18,
+                explorer: "https://bscscan.com/token/0x55d398326f99059ff775485246999027b3197955",
+                icon: "fa-solid fa-coins text-yellow-400"
+            },
+            {
+                name: "Polygon (POS)",
+                symbol: "MATIC",
+                badge: "L2 Escalonável",
+                badgeColor: "bg-purple-500/10 text-purple-400 border-purple-500/20",
+                address: "0xc2132d05d31c914a87c6611c10748aeb04b58e8f",
+                decimals: 6,
+                explorer: "https://polygonscan.com/token/0xc2132d05d31c914a87c6611c10748aeb04b58e8f",
+                icon: "fa-solid fa-layer-group text-purple-400"
+            },
+            {
+                name: "Solana (SPL Token)",
+                symbol: "SOL",
+                badge: "Ultra Rápida",
+                badgeColor: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+                address: "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+                decimals: 6,
+                explorer: "https://solscan.io/token/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+                icon: "fa-solid fa-sun text-emerald-400"
+            },
+            {
+                name: "Arbitrum One",
+                symbol: "ARB",
+                badge: "Ethereum L2",
+                badgeColor: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
+                address: "0xFfd778B5827929A39031E245363243f72eA31fdd",
+                decimals: 6,
+                explorer: "https://arbiscan.io/token/0xFfd778B5827929A39031E245363243f72eA31fdd",
+                icon: "fa-solid fa-network-wired text-cyan-400"
+            }
+        ];
+
+        // Render Contracts
+        function renderContracts(filter = "") {
+            const grid = document.getElementById("contracts-grid");
+            grid.innerHTML = "";
+
+            const filtered = NETWORKS.filter(n => 
+                n.name.toLowerCase().includes(filter.toLowerCase()) || 
+                n.address.toLowerCase().includes(filter.toLowerCase())
+            );
+
+            filtered.forEach(net => {
+                const card = document.createElement("div");
+                card.className = "bg-slate-800/40 border border-slate-700/50 hover:border-tether-500/40 rounded-xl p-5 space-y-4 transition-all";
+                card.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2.5">
+                            <i class="${net.icon} text-lg"></i>
+                            <span class="font-bold text-white text-sm">${net.name}</span>
+                        </div>
+                        <span class="text-[10px] px-2 py-0.5 rounded border font-medium ${net.badgeColor}">${net.badge}</span>
+                    </div>
+
+                    <div class="space-y-1">
+                        <span class="text-[10px] text-slate-400 uppercase font-semibold">Endereço de Contrato:</span>
+                        <div class="flex items-center justify-between bg-slate-950 p-2 rounded-lg border border-slate-800">
+                            <span class="font-mono text-xs text-slate-300 truncate mr-2">${net.address}</span>
+                            <button onclick="copyText('${net.address}', this)" class="text-slate-400 hover:text-tether-500 p-1">
+                                <i class="fa-regular fa-copy text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between text-xs text-slate-400 pt-2 border-t border-slate-800/80">
+                        <span>Decimais: <strong class="text-slate-200 font-mono">${net.decimals}</strong></span>
+                        <a href="${net.explorer}" target="_blank" class="hover:text-tether-500 transition-colors flex items-center space-x-1">
+                            <span>Explorer</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                        </a>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterContracts() {
+            const query = document.getElementById("contract-search").value;
+            renderContracts(query);
+        }
+
+        // Tab Switching
+        function switchTab(tabId) {
+            document.querySelectorAll(".tab-content").forEach(el => el.classList.add("hidden"));
+            document.querySelectorAll(".tab-btn").forEach(btn => {
+                btn.classList.remove("border-tether-500", "text-tether-500");
+                btn.classList.add("border-transparent", "text-slate-400");
+            });
+
+            document.getElementById(`tab-${tabId}`).classList.remove("hidden");
+            const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+            activeBtn.classList.add("border-tether-500", "text-tether-500");
+            activeBtn.classList.remove("border-transparent", "text-slate-400");
+
+            if (tabId === "tools") {
+                generateQRCode();
+            }
+        }
+
+        // Language Snippets Switcher
+        function showCodeLanguage(lang) {
+            document.querySelectorAll(".code-block").forEach(b => b.classList.add("hidden"));
+            document.querySelectorAll(".lang-btn").forEach(btn => {
+                btn.classList.remove("bg-tether-500", "text-slate-950");
+                btn.classList.add("bg-slate-800", "text-slate-300");
+            });
+
+            document.getElementById(`code-${lang}`).classList.remove("hidden");
+            const activeBtn = document.getElementById(`lang-btn-${lang}`);
+            activeBtn.classList.add("bg-tether-500", "text-slate-950");
+            activeBtn.classList.remove("bg-slate-800", "text-slate-300");
+        }
+
+        // Copy Helper
+        function copyText(text, btn) {
+            navigator.clipboard.writeText(text);
+            const origIcon = btn.innerHTML;
+            btn.innerHTML = `<i class="fa-solid fa-check text-emerald-400 text-xs"></i>`;
+            setTimeout(() => {
+                btn.innerHTML = origIcon;
+            }, 1500);
+        }
+
+        function copyCode(elementId) {
+            const codeText = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(codeText);
+            alert("Código copiado para a área de transferência!");
+        }
+
+        // Address Validation
+        function validateAddressInput() {
+            const network = document.getElementById("val-network").value;
+            const address = document.getElementById("val-address").value.trim();
+            const resultDiv = document.getElementById("val-result");
+
+            if (!address) {
+                resultDiv.classList.add("hidden");
+                return;
+            }
+
+            resultDiv.classList.remove("hidden", "bg-emerald-500/10", "border-emerald-500/30", "text-emerald-400", "bg-red-500/10", "border-red-500/30", "text-red-400");
+
+            let isValid = false;
+
+            if (network === "TRC20") {
+                isValid = /^T[a-zA-Z0-9]{33}$/.test(address);
+            } else if (network === "EVM") {
+                isValid = /^0x[a-fA-F0-9]{40}$/.test(address);
+            } else if (network === "SOL") {
+                isValid = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(address);
+            }
+
+            if (isValid) {
+                resultDiv.classList.add("bg-emerald-500/10", "border-emerald-500/30", "text-emerald-400");
+                resultDiv.innerHTML = `<i class="fa-solid fa-circle-check mr-1.5"></i> Endereço VÁLIDO com formato para rede ${network}.`;
+            } else {
+                resultDiv.classList.add("bg-red-500/10", "border-red-500/30", "text-red-400");
+                resultDiv.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1.5"></i> Formato de endereço INVÁLIDO para ${network}. Verifique novamente!`;
+            }
+        }
+
+        // QR Code Generator
+        let qrInstance = null;
+        function generateQRCode() {
+            const address = document.getElementById("qr-input-address").value.trim();
+            const amount = document.getElementById("qr-input-amount").value.trim();
+            const qrContainer = document.getElementById("qrcode");
+
+            qrContainer.innerHTML = "";
+
+            if (!address) return;
+
+            let payload = address;
+            if (amount) {
+                payload = `${address}?amount=${amount}`;
+            }
+
+            qrInstance = new QRCode(qrContainer, {
+                text: payload,
+                width: 120,
+                height: 120,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+
+            document.getElementById("qr-caption").innerText = amount ? `Solicitando: ${amount} USDT` : "Escaneie para pagar";
+        }
+
+        // Unit Converter
+        function convertUnits(source) {
+            const humanInput = document.getElementById("unit-human");
+            const rawInput = document.getElementById("unit-raw");
+
+            if (source === 'human') {
+                const val = parseFloat(humanInput.value) || 0;
+                rawInput.value = Math.floor(val * 1000000);
+            } else {
+                const val = parseInt(rawInput.value) || 0;
+                humanInput.value = (val / 1000000).toFixed(6);
+            }
+        }
+
+        // Initialization
+        window.addEventListener("DOMContentLoaded", () => {
+            renderContracts();
+            generateQRCode();
+        });
+    </script>
+</body>
+</html>

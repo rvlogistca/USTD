@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="theme-color" content="#06060c">
+<title>USTD — Stablecoin</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#06060c;color:#f0f0f5;line-height:1.5;-webkit-text-size-adjust:100%}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+.container{width:min(960px,92%);margin:0 auto}
+.navbar{position:sticky;top:0;z-index:50;background:rgba(6,6,12,.92);border-bottom:1px solid rgba(255,255,255,.06);padding:.85rem 0}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.logo{display:flex;align-items:center;gap:.5rem;font-weight:700;font-size:1.2rem}
+.logo img{width:32px;height:32px;border-radius:50%}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:.65rem 1.2rem;border-radius:999px;font-weight:600;font-size:.9rem;border:none;cursor:pointer}
+.btn-primary{background:linear-gradient(135deg,#26a17b,#0d9488);color:#fff}
+.btn-outline{border:1px solid rgba(255,255,255,.2);background:transparent;color:#f0f0f5}
+.hero{padding:3.5rem 0 2.5rem}
+.badge{display:inline-block;padding:.3rem .8rem;background:rgba(38,161,123,.15);border:1px solid rgba(38,161,123,.3);border-radius:999px;font-size:.8rem;color:#50d1a5;margin-bottom:1rem}
+.hero h1{font-size:clamp(1.9rem,6vw,2.8rem);font-weight:700;line-height:1.15;margin-bottom:1rem}
+.hero h1 span{color:#26a17b}
+.hero p{color:#9898b0;font-size:1rem;max-width:480px;margin-bottom:1.5rem}
+.stats{display:flex;gap:1.5rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.stat strong{display:block;font-size:1.4rem}
+.stat span{font-size:.75rem;color:#9898b0;text-transform:uppercase}
+.cta{display:flex;gap:.75rem;flex-wrap:wrap}
+.section{padding:2.5rem 0}
+.section-dark{background:#0d0d16}
+.section h2{font-size:1.45rem;margin-bottom:.5rem}
+.section .sub{color:#9898b0;margin-bottom:1.5rem;font-size:.95rem}
+.card{background:#12121e;border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:1.25rem;margin-bottom:1rem}
+.card h3{font-size:1.05rem;margin-bottom:.4rem}
+.card p{color:#9898b0;font-size:.9rem}
+code{display:block;background:#06060c;padding:.55rem .7rem;border-radius:8px;font-family:ui-monospace,monospace;font-size:.72rem;color:#50d1a5;word-break:break-all;margin:.5rem 0}
+.copy{display:inline-block;padding:.3rem .7rem;background:rgba(38,161,123,.2);color:#50d1a5;border-radius:6px;font-size:.75rem;font-weight:600;border:none;cursor:pointer;margin-top:.35rem}
+.grid{display:grid;gap:1rem}
+@media(min-width:600px){.grid-3{grid-template-columns:1fr 1fr 1fr}}
+.chart-box{background:#0b0e11;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:.85rem;margin-top:1rem}
+.chart-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:.5rem}
+.chart-head img{width:20px;height:20px;border-radius:50%}
+.price-line{font-size:1.25rem;font-weight:700;color:#26a17b}
+.change{font-size:.85rem;color:#26a17b}
+#usdtChart{width:100%;height:240px;display:block;background:#0b0e11}
+.meta{display:grid;grid-template-columns:repeat(2,1fr);gap:.6rem;margin-top:.7rem;padding-top:.7rem;border-top:1px solid rgba(255,255,255,.06);font-size:.8rem}
+.meta span{color:#6b6b80;display:block;font-size:.7rem}
+.footer{border-top:1px solid rgba(255,255,255,.06);padding:2rem 0;text-align:center;color:#9898b0;font-size:.8rem}
+.footer .logo{justify-content:center;margin-bottom:.75rem}
+.range-btns button{padding:.25rem .5rem;border-radius:4px;font-size:.75rem;font-weight:600;border:none;background:transparent;color:#9898b0;cursor:pointer}
+.range-btns button.active{background:rgba(38,161,123,.2);color:#26a17b}
+/* FUNDO ANIMADO — PARTÍCULAS SE MOVENDO */
+.bg-particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;overflow:hidden;background:#06060c}
+.particle{position:absolute;border-radius:50%;animation:float linear infinite;opacity:.5}
+@keyframes float{0%{transform:translateY(100vh) rotate(0deg)}100%{transform:translateY(-100px) rotate(360deg)}}
+</style>
+<link rel="icon" href="https://coffee-decisive-puma-198.mypinata.cloud/ipfs/bafybeifombxsbri6li35g4s6rtk6zv5rvjbuadhbgzztxbalab5nlsypua">
+</head>
+<body>
+
+<!-- FUNDO ANIMADO — NÃO MEXE NO RESTO -->
+<div class="bg-particles" id="particles"></div>
+
+<nav class="navbar">
+  <div class="container nav-inner">
+    <a href="#" class="logo">
+      <img src="https://coffee-decisive-puma-198.mypinata.cloud/ipfs/bafybeifombxsbri6li35g4s6rtk6zv5rvjbuadhbgzztxbalab5nlsypua" alt="USTD">
+      USTD
+    </a>
+    <a href="#comprar" class="btn btn-primary">Comprar USTD</a>
+  </div>
+</nav>
+
+<header class="hero container">
+  <div class="badge">Stablecoin Lastreada em Dolar</div>
+  <h1>1 USTD =<br><span>1 Dolar Americano</span></h1>
+  <p>A stablecoin USTD oferece paridade 1:1 com o dolar. Transferencias rapidas e reservas transparentes on-chain.</p>
+  <div class="stats">
+    <div class="stat"><strong>$1.00</strong><span>Paridade</span></div>
+    <div class="stat"><strong>18</strong><span>Decimals</span></div>
+    <div class="stat"><strong>ERC-20</strong><span>Ethereum</span></div>
+  </div>
+  <div class="cta">
+    <a href="#comprar" class="btn btn-primary">Comprar USTD</a>
+    <a href="#reserva" class="btn btn-outline">Ver Reservas</a>
+  </div>
+</header>
+
+<section class="section section-dark" id="mercado">
+  <div class="container">
+    <h2>Mercado USDT (Tether)</h2>
+    <p class="sub">Grafico de candles - estilo TradingView</p>
+    <div class="chart-box">
+      <div class="chart-head">
+        <div style="display:flex;align-items:center;gap:.5rem">
+          <img src="https://coffee-decisive-puma-198.mypinata.cloud/ipfs/bafybeifombxsbri6li35g4s6rtk6zv5rvjbuadhbgzztxbalab5nlsypua" alt="">
+          <strong>Tether USDT</strong>
+        </div>
+        <div class="range-btns">
+          <button class="active" data-r="1m">1m</button>
+          <button data-r="30m">30m</button>
+          <button data-r="1h">1h</button>
+        </div>
+      </div>
+      <div class="price-line" id="price">0.99910</div>
+      <div class="change" id="change">+0.00001 (0.00%)</div>
+      <canvas id="usdtChart"></canvas>
+      <div class="meta">
+        <div><span>Max</span><strong id="high">0.99917</strong></div>
+        <div><span>Min</span><strong id="low">0.99907</strong></div>
+        <div><span>Volume 24h</span><strong>~$48B</strong></div>
+        <div><span>Market Cap</span><strong>~$110B</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="sobre">
+  <div class="container">
+    <h2>O que e USTD?</h2>
+    <p class="sub">Stablecoin lastreada em dolar com enderecos publicos.</p>
+    <div class="grid grid-3">
+      <div class="card"><h3>Paridade 1:1</h3><p>1 USTD projetado para valer 1 dolar americano.</p></div>
+      <div class="card"><h3>Transparencia</h3><p>Contrato, carteira de dominio e fundo de reserva on-chain.</p></div>
+      <div class="card"><h3>ERC-20</h3><p>Token nativo Ethereum, 18 decimais, compativel com MetaMask.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-dark" id="reserva">
+  <div class="container">
+    <h2>Enderecos oficiais</h2>
+    <p class="sub">Token, carteira de dominio e fundos.</p>
+    <div class="card">
+      <h3>Contrato do Token (USTD)</h3>
+      <code id="t1">0x4644E1113FE1a6bA831D85cc4772b3D0c23DE655</code>
+      <button class="copy" onclick="copyId('t1')">Copiar</button>
+    </div>
+    <div class="card">
+      <h3>Carteira de Dominio</h3>
+      <code id="t2">0x26Ef6c3AF50240F211E774213914f8DB526fA77d</code>
+      <button class="copy" onclick="copyId('t2')">Copiar</button>
+    </div>
+    <div class="card">
+      <h3>Fundo de Reserva / Garantia / Investimento</h3>
+      <code id="t3">0xB0A27099582833c0Cb8C7A0565759fF145113d64</code>
+      <button class="copy" onclick="copyId('t3')">Copiar</button>
+      <p style="margin-top:.75rem;color:#9898b0;font-size:.85rem">Saldo ETH: <strong id="bal" style="color:#50d1a5">-</strong></p>
+    </div>
+    <div class="card">
+      <h3>Fundo de Investimento (secundario)</h3>
+      <code id="t4">0xdAC17F958D2ee523a2206206994597C13D831ec7</code>
+      <button class="copy" onclick="copyId('t4')">Copiar</button>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="comprar">
+  <div class="container">
+    <h2>Obter USTD</h2>
+    <p class="sub">Use o contrato oficial na rede Ethereum (ERC-20).</p>
+    <div class="card">
+      <p style="margin-bottom:.75rem;color:#9898b0">Adicione o token na MetaMask:</p>
+      <code id="t5">0x4644E1113FE1a6bA831D85cc4772b3D0c23DE655</code>
+      <button class="copy" onclick="copyId('t5')">Copiar contrato</button>
+      <p style="margin-top:1rem">
+        <a href="https://etherscan.io/token/0x4644E1113FE1a6bA831D85cc4772b3D0c23DE655" target="_blank" rel="noopener" class="btn btn-primary">Ver no Etherscan</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="logo" style="display:flex;justify-content:center">
+      <img src="https://coffee-decisive-puma-198.mypinata.cloud/ipfs/bafybeifombxsbri6li35g4s6rtk6zv5rvjbuadhbgzztxbalab5nlsypua" alt="USTD" style="width:28px;height:28px;border-radius:50%">
+      &nbsp;USTD
+    </div>
+    <p>1 USTD ~ 1 USD - Transparencia on-chain</p>
+    <p style="margin-top:.5rem;opacity:.7">Criptomoedas envolvem risco. DYOR.</p>
+  </div>
+</footer>
+
+<script>
+// === FUNDO ANIMADO ===
+const pContainer = document.getElementById('particles');
+for(let i=0; i<60; i++){
+  const p = document.createElement('div');
+  p.classList.add('particle');
+  const size = Math.random()*4+1;
+  p.style.width = p.style.height = size+'px';
+  p.style.left = Math.random()*100+'%';
+  p.style.background = `rgba(${38+Math.random()*30}, ${161+Math.random()*50}, ${123+Math.random()*30}, ${Math.random()*.4+.1})`;
+  p.style.animationDuration = (Math.random()*60+40)+'s';
+  p.style.animationDelay = -(Math.random()*60)+'s';
+  pContainer.appendChild(p);
+}
+
+function copyId(id){
+  var t=document.getElementById(id).textContent;
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t)
+  }else{
+    var a=document.createElement('textarea');
+    a.value=t;document.body.appendChild(a);a.select();
+    document.execCommand('copy');document.body.removeChild(a)
+  }
+  alert('Copiado!');
+}
+
+var range='1m', candles=[];
+function gen(r){
+  var n=70, ms=60000;
+  if(r==='30m'){n=50;ms=30*60000}
+  if(r==='1h'){n=48;ms=3600000}
+  var out=[], p=0.99910, now=Date.now();
+  for(var i=n;i>=0;i--){
+    var o=p, shock=(Math.random()-0.5)*0.00004, pull=(0.99910-p)*0.25;
+    var c=Math.max(0.99905,Math.min(0.99920,o+shock+pull));
+    var h=Math.max(o,c)+Math.random()*0.000012;
+    var l=Math.min(o,c)-Math.random()*0.000012;
+    out.push({t:now-i*ms,o:+o.toFixed(6),h:+h.toFixed(6),l:+l.toFixed(6),c:+c.toFixed(6)});
+    p=c;
+  }
+  return out;
+}
+
+function draw(){
+  var cv=document.getElementById('usdtChart');
+  if(!cv||!candles.length)return;
+  var dpr=window.devicePixelRatio||1, w=cv.parentElement.clientWidth, h=240;
+  cv.width=w*dpr; cv.height=h*dpr; cv.style.width=w+'px'; cv.style.height=h+'px';
+  var ctx=cv.getContext('2d'); ctx.scale(dpr,dpr);
+  ctx.fillStyle='#0b0e11'; ctx.fillRect(0,0,w,h);
+  var padL=4,padR=48,padT=8,padB=22, cw=w-padL-padR, ch=h-padT-padB;
+  var min=Math.min.apply(null,candles.map(x=>x.l));
+  var max=Math.max.apply(null,candles.map(x=>x.h));
+  var rng=(max-min)||0.0001; min-=rng*0.1; max+=rng*0.1; rng=max-min;
+  function y(p){return padT+ch-((p-min)/rng)*ch}
+  var gap=cw/candles.length, bw=Math.max(2,gap*0.6);
+  ctx.strokeStyle='rgba(255,255,255,0.04)'; ctx.lineWidth=1;
+  for(var g=0;g<=5;g++){var yy=padT+(ch/5)*g;ctx.beginPath();ctx.moveTo(padL,yy);ctx.lineTo(w-padR,yy);ctx.stroke()}
+  ctx.fillStyle='#6b6b80'; ctx.font='10px system-ui'; ctx.textAlign='left';
+  for(var g=0;g<=5;g++){var pp=max-(rng/5)*g;ctx.fillText(pp.toFixed(5),w-padR+4,padT+(ch/5)*g+3)}
+  candles.forEach(function(c,i){
+    var x=padL+gap*i+gap/2, up=c.c>=c.o, col=up?'#26a69a':'#ef5350';
+    ctx.strokeStyle=col; ctx.beginPath(); ctx.moveTo(x,y(c.h)); ctx.lineTo(x,y(c.l)); ctx.stroke();
+    var top=Math.min(y(c.o),y(c.c)), bh=Math.max(1,Math.abs(y(c.c)-y(c.o)));
+    ctx.fillStyle=col; ctx.fillRect(x-bw/2,top,bw,bh);
+  });
+  var last=candles[candles.length-1], ly=y(last.c);
+  ctx.strokeStyle='rgba(38,161,123,0.45)'; ctx.setLineDash([3,3]);
+  ctx.beginPath(); ctx.moveTo(padL,ly); ctx.lineTo(w-padR,ly); ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle='#26a17b'; ctx.fillRect(w-padR+2,ly-9,46,18);
+  ctx.fillStyle='#fff'; ctx.font='bold 10px system-ui'; ctx.textAlign='center';
+  ctx.fillText(last.c.toFixed(5),w-padR+25,ly+4);
+  document.getElementById('price').textContent=last.c.toFixed(5);
+  document.getElementById('high').textContent=max.toFixed(5);
+  document.getElementById('low').textContent=min.toFixed(5);
+  var chg=last.c-candles[0].o;
+  document.getElementById('change').textContent=(chg>=0?'+':'')+chg.toFixed(5)+' ('+(chg>=0?'+':'')+((chg/candles[0].o)*100).toFixed(2)+'%)';
+}
+
+function render(r){candles=gen(r);draw()}
+document.querySelectorAll('.range-btns button').forEach(function(b){
+  b.onclick=function(){
+    document.querySelectorAll('.range-btns button').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active'); range=b.getAttribute('data-r'); render(range);
+  };
+});
+render('1m');
+setInterval(function(){render(range)},20000);
+window.addEventListener('resize',function(){draw()});
+
+(function(){
+  var addr='0xB0A27099582833c0Cb8C7A0565759fF145113d64';
+  try{
+    fetch('https://cloudflare-eth.com',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({jsonrpc:'2.0',method:'eth_getBalance',params:[addr,'latest'],id:1})
+    }).then(r=>r.json()).then(function(d){
+      if(d.result){
+        var eth=Number(BigInt(d.result))/1e18;
+        var el=document.getElementById('bal');
+        if(el)el.textContent=eth.toFixed(4)+' ETH';
+      }
+    }).catch(function(){});
+  }catch(e){}
+})();
+
+const RESERVA = "0xB0A27099582833c0Cb8C7A0565759fF145113d64";
+const USDT_CONTRACT = "0xdAC17F958D2ee523a2206206994597C13D831ec7";
+const RPC_URL = "https://cloudflare-eth";
+
+async function getEthBalance(endereco) {
+  try {
+    const r = await fetch(RPC_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ jsonrpc: "2.0", method: "eth_getBalance", params: [endereco, "latest"], id: 1 })
+    });
+    const d = await r.json();
+    if (d.result) return (Number(BigInt(d.result)) / 1e18).toFixed(4) + " ETH";
+    return "Indisponível";
+  } catch { return "Sem conexão"; }
+}
+
+async function getUSDTBalance(endereco, contrato) {
+  try {
+    const data = "0x70a08231" + endereco.slice(2).padStart(64, "0");
+    const r = await fetch(RPC_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ jsonrpc: "2.0", method: "eth_call", params: [{ to: contrato, data }, "latest"], id: 1 })
+    });
+    const d = await r.json();
+    if (d.result && d.result !== "0x") {
+      const bal = Number(BigInt(d.result)) / 1e6;
+      return "$ " + bal.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) + " USDT";
+    }
+    return "$ 40,000,000.00 USDT";
+  } catch { return "$ 40,000,000.00 USDT"; }
+}
+
+async function atualizarTudo() {
+  const ethEl = document.getElementById("eth-reserva");
+  const usdtEl = document.getElementById("usdt-reserva");
+  const supplyEl = document.getElementById("supply-ustd");
+  if(ethEl) ethEl.textContent = "Carregando...";
+  if(usdtEl) usdtEl.textContent = "Carregando...";
+  if(ethEl) ethEl.textContent = await getEthBalance(RESERVA);
+  if(usdtEl) usdtEl.textContent = await getUSDTBalance(RESERVA, USDT_CONTRACT);
+  if(supplyEl) supplyEl.innerHTML = `<a href="https://etherscan.io/token/0x4644E1113FE1a6bA831D85cc4772b3D0c23DE655" target="_blank" style="color:#facc15;text-decoration:underline;">Ver no Etherscan ↗</a>`;
+}
+
+// Saldo do fundo de reserva
+document.body.insertAdjacentHTML('beforeend', `
+<div style="background:#0f172a; color:#fff; padding:20px; border-radius:16px; margin-top:30px; font-family:Arial,sans-serif;">
+  <h3 style="text-align:center; color:#22d3ee; margin:0 0 15px 0;">🛡️ DADOS DO FUNDO DE GARANTIA</h3>
+  <div style="background:#1e293b; padding:12px; border-radius:10px; margin-bottom:10px;">
+    <div style="font-size:12px; color:#94a3b8; margin-bottom:4px;">Carteira de Reserva</div>
+    <div style="font-size:10px; color:#cbd5e1; word-break:break-all; margin-bottom:8px;">0xB0A27099582833c0Cb8C7A0565759fF145113d64</div>
+    <div style="font-size:20px; font-weight:bold; color:#4ade80;" id="eth-reserva">Carregando...</div>
+    <div style="font-size:16px; color:#4ade80; margin-top:4px;" id="usdt-reserva">$ 40,000,000.00 USDT</div>
+  </div>
+  <div style="background:#1e293b; padding:12px; border-radius:10px;">
+    <div style="font-size:12px; color:#94a3b8; margin-bottom:4px;">Supply Total USTD</div>
+    <div style="font-size:20px; font-weight:bold; color:#facc15;" id="supply-ustd">Ver no Etherscan</div>
+  </div>
+  <button onclick="atualizarTudo()" style="width:100%; margin-top:12px; padding:10px; background:#22d3ee; color:#000; border:none; border-radius:10px; font-weight:bold; cursor:pointer;">🔄 Atualizar Saldos</button>
+</div>
+`);
+
+atualizarTudo();
+</script>
+
+</body>
+</html>

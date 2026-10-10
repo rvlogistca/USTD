@@ -1,82 +1,90 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#063d2e">
-  <meta name="description" content="USTD — token na Ethereum Mainnet.">
-  <title>USTD | Ethereum Token</title>
-  <link rel="icon" type="image/svg+xml" href="./ustd-icon.svg">
-  <link rel="stylesheet" href="./style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#07131d">
+<title>USTD Network | Contrato & API</title>
+<style>
+:root{color-scheme:dark;--bg:#07131d;--panel:#0d202c;--line:#203b49;--text:#eef7f8;--muted:#9bb2bd;--green:#5ee0b5;--blue:#75baff;--red:#ff9696}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top right,#123b3b 0,transparent 42%),var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+main{max-width:920px;margin:auto;padding:32px 18px 60px}.top{display:flex;align-items:center;gap:13px;margin-bottom:28px}.logo{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(135deg,#2abf9c,#126f76);font-weight:900;color:#041914;font-size:22px}.eyebrow{color:var(--green);font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}h1{font-size:clamp(26px,5vw,40px);line-height:1.1;margin:4px 0}p{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.card{background:rgba(13,32,44,.94);border:1px solid var(--line);border-radius:18px;padding:22px;min-width:0}.wide{grid-column:1/-1}.label{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:800;margin-bottom:9px}.value{overflow-wrap:anywhere;font:14px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;background:#071720;border:1px solid var(--line);padding:13px;border-radius:10px;color:var(--blue)}button{border:0;border-radius:10px;background:var(--green);color:#06251d;font-weight:800;padding:12px 16px;cursor:pointer;margin:7px 7px 0 0}button.secondary{background:#173848;color:var(--text);border:1px solid #315767}button:disabled{opacity:.55;cursor:wait}.status{white-space:pre-wrap;overflow-wrap:anywhere;margin-top:14px;padding:12px;border-radius:10px;background:#102b36;color:var(--muted);font-size:14px}.status.ok{color:var(--green)}.status.err{color:var(--red)}.pill{display:inline-block;border:1px solid var(--line);border-radius:99px;padding:4px 9px;font-size:12px;color:var(--muted)}.foot{font-size:12px;margin-top:20px}.warn{border-left:3px solid #e8c36a;padding-left:12px;color:#e6d9b4;font-size:13px}@media(max-width:650px){.grid{grid-template-columns:1fr}.wide{grid-column:auto}main{padding-top:22px}.card{padding:18px}}
+</style>
 </head>
-
 <body>
-  <main class="page">
-    <section class="hero">
-      <div class="coin-wrap">
-        <img src="./ustd-icon.svg" alt="USTD" class="coin">
-      </div>
-
-      <div class="hero-copy">
-        <span class="eyebrow">ETHEREUM MAINNET</span>
-        <h1>USTD</h1>
-        <p class="subtitle">Digital Token</p>
-        <p class="description">
-          Informações do contrato, endereço e integração com carteira.
-        </p>
-      </div>
-    </section>
-
-    <section class="card">
-      <div class="token-head">
-        <img src="./ustd-icon.svg" alt="" class="mini-logo">
-        <div>
-          <h2>USTD</h2>
-          <span>ERC-20 • Ethereum</span>
-        </div>
-        <span class="network-badge">MAINNET</span>
-      </div>
-
-      <div class="contract">
-        <label>Endereço do contrato</label>
-        <div class="address-row">
-          <code id="contractAddress">0x4644E1113FE1a6bA831D85cc4772b3D0c23DE655</code>
-          <button id="copyBtn" class="icon-btn" type="button" title="Copiar contrato" aria-label="Copiar contrato">⧉</button>
-        </div>
-        <small id="copyStatus" aria-live="polite"></small>
-      </div>
-
-      <div class="details">
-        <div><span>Rede</span><strong>Ethereum</strong></div>
-        <div><span>Padrão</span><strong>ERC-20</strong></div>
-        <div><span>Símbolo</span><strong>USTD</strong></div>
-        <div><span>Decimais</span><strong>18</strong></div>
-      </div>
-
-      <div class="actions">
-        <button id="addWalletBtn" class="primary-btn" type="button">
-          🦊 Adicionar USTD à carteira
-        </button>
-
-        <a
-          class="secondary-btn"
-          href="https://etherscan.io/token/0x4644E1113FE1a6bA831D85cc4772b3D0c23DE655"
-          target="_blank"
-          rel="noopener noreferrer">
-          Ver contrato no Etherscan ↗
-        </a>
-      </div>
-
-      <p id="walletStatus" class="status" aria-live="polite"></p>
-    </section>
-
-    <footer>
-      <span>USTD</span>
-      <span>•</span>
-      <span>Ethereum Mainnet</span>
-    </footer>
-  </main>
-
-  <script src="./script.js"></script>
+<main>
+  <header class="top">
+    <div class="logo">U</div>
+    <div><div class="eyebrow">Web3 • API • Infraestrutura</div><h1>USTD Network</h1><span class="pill">Chain ID configurado: 4644</span></div>
+  </header>
+  <p>Central de conexão para a API e carteira Web3. Verificações reais dependem de configurar o endpoint RPC correto.</p>
+  <section class="grid">
+    <article class="card wide">
+      <div class="label">Endereço do contrato configurado</div>
+      <div class="value" id="contract">0x4644E1113FE1a6bA831D85cc4772b3D0c23DE655</div>
+      <button class="secondary" id="copyBtn">Copiar endereço</button>
+      <button id="walletBtn">Conectar MetaMask</button>
+      <div id="walletStatus" class="status" role="status">Carteira ainda não conectada.</div>
+    </article>
+    <article class="card">
+      <div class="label">API • /api/health</div>
+      <p>Verifica se o backend responde e se o RPC foi configurado no servidor.</p>
+      <button id="healthBtn">Verificar API</button>
+      <div id="healthStatus" class="status" role="status">Aguardando verificação.</div>
+    </article>
+    <article class="card">
+      <div class="label">API • POST /api/links</div>
+      <p>Envia a URI solicitada para validação pela API.</p>
+      <button id="apiBtn">Testar /common.ethereum</button>
+      <div id="apiStatus" class="status" role="status">Aguardando requisição.</div>
+    </article>
+    <article class="card wide">
+      <div class="label">Estado da rede</div>
+      <div id="chainStatus" class="status">A rede e o contrato ainda não foram verificados.</div>
+      <p class="warn">A conexão da carteira não comprova que o contrato é legítimo. Antes de assinar transações, confirme o RPC, o Chain ID e o bytecode do contrato em uma fonte confiável.</p>
+    </article>
+  </section>
+  <p class="foot">USTD starter • Nunca insira frase-semente ou chave privada neste site.</p>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+const CONTRACT = $("contract").textContent.trim();
+const EXPECTED_CHAIN_HEX = "0x1234"; // 4644 decimal
+function show(id, text, kind="") { const el=$(id); el.textContent=text; el.className="status"+(kind?" "+kind:""); }
+$("copyBtn").addEventListener("click", async () => {
+  try { await navigator.clipboard.writeText(CONTRACT); show("walletStatus","Endereço copiado.","ok"); }
+  catch { show("walletStatus","Não foi possível copiar automaticamente. Selecione o endereço manualmente.","err"); }
+});
+$("healthBtn").addEventListener("click", async () => {
+  show("healthStatus","Consultando API...");
+  try {
+    const r=await fetch("/api/health"); const d=await r.json();
+    show("healthStatus",JSON.stringify(d,null,2),r.ok&&d.ok?"ok":"err");
+  } catch(e) { show("healthStatus","Falha ao consultar API: "+e.message,"err"); }
+});
+$("apiBtn").addEventListener("click", async () => {
+  show("apiStatus","Enviando requisição...");
+  try {
+    const r=await fetch("/api/links",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({uri:"/common.ethereum"})});
+    const d=await r.json();
+    show("apiStatus",JSON.stringify(d,null,2),r.ok&&d.ok?"ok":"err");
+  } catch(e) { show("apiStatus","Falha ao consultar API: "+e.message,"err"); }
+});
+$("walletBtn").addEventListener("click", async () => {
+  if (!window.ethereum) { show("walletStatus","MetaMask não encontrada. Instale/ative a carteira e abra esta página em um navegador compatível.","err"); return; }
+  try {
+    const accounts=await window.ethereum.request({method:"eth_requestAccounts"});
+    const chain=await window.ethereum.request({method:"eth_chainId"});
+    const networkOk=chain.toLowerCase()===EXPECTED_CHAIN_HEX;
+    show("walletStatus","Conta: "+accounts[0]+"\nChain ID recebido: "+parseInt(chain,16)+"\nRede esperada: 4644\n"+(networkOk?"A carteira está na rede esperada.":"A carteira está em outra rede; confirme os parâmetros oficiais antes de adicionar uma rede."),networkOk?"ok":"err");
+    if(networkOk) {
+      const code=await window.ethereum.request({method:"eth_getCode",params:[CONTRACT,"latest"]});
+      show("chainStatus","Bytecode no endereço: "+(code==="0x"?"não encontrado nesta rede.":"encontrado ("+((code.length-2)/2)+" bytes).")+"\nIsso não confirma auditoria, propriedade ou legitimidade do contrato.",code==="0x"?"err":"ok");
+    } else {
+      show("chainStatus","Não foi consultado o bytecode: a carteira não está na Chain ID 4644.");
+    }
+  } catch(e) { show("walletStatus","Conexão não concluída: "+(e.message||String(e)),"err"); }
+});
+</script>
 </body>
 </html>

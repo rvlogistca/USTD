@@ -1,0 +1,17 @@
+{
+  "name": "ustd-network-starter",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Starter frontend and API for USTD Network (Chain ID 4644)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "helmet": "^8.0.0"
+  }
+}
